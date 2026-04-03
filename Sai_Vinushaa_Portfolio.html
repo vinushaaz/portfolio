@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sai Vinushaa — Embedded Systems Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #050d1a;
+    --deep: #0a1628;
+    --blue-dark: #0f2444;
+    --blue-mid: #1a3a6e;
+    --blue: #1e5bb8;
+    --blue-bright: #2e7de9;
+    --cyan: #38bdf8;
+    --cyan-light: #7dd3fc;
+    --white: #f0f6ff;
+    --muted: #8aa4c8;
+    --dim: #3d5a80;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--font-display);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--cyan);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--cyan);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+  }
+
+  /* Grid bg */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(46,125,233,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(46,125,233,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(5,13,26,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(46,125,233,0.15);
+  }
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0 4rem;
+    position: relative; z-index: 1;
+  }
+  .hero-inner { max-width: 900px; }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--cyan);
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  .hero-name span {
+    display: block;
+    background: linear-gradient(135deg, var(--white) 0%, var(--cyan-light) 60%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-role {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    max-width: 560px;
+    font-weight: 400;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: none;
+  }
+  .btn-primary {
+    background: var(--blue-bright);
+    color: var(--white);
+    border: 1px solid var(--blue-bright);
+  }
+  .btn-primary:hover {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--navy);
+    transform: translateY(-2px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--dim);
+  }
+  .btn-outline:hover {
+    border-color: var(--cyan);
+    transform: translateY(-2px);
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.25;
+  }
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: var(--blue);
+    top: -100px; right: -100px;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .orb-2 {
+    width: 300px; height: 300px;
+    background: var(--cyan);
+    bottom: 10%; left: 10%;
+    opacity: 0.1;
+    animation: drift 9s ease-in-out infinite alternate-reverse;
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; position: relative; z-index: 1; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--cyan);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--cyan);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+    line-height: 1.1;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.85;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+  }
+  .about-text p strong { color: var(--cyan-light); font-weight: 600; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(46,125,233,0.15);
+    border: 1px solid rgba(46,125,233,0.15);
+  }
+  .stat-card {
+    background: var(--deep);
+    padding: 1.75rem;
+    transition: background 0.2s;
+  }
+  .stat-card:hover { background: var(--blue-dark); }
+  .stat-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-desc {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* SKILLS */
+  .skills-section { background: var(--deep); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: rgba(46,125,233,0.12);
+    border: 1px solid rgba(46,125,233,0.12);
+  }
+  .skill-group {
+    background: var(--navy);
+    padding: 2rem;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-group::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--cyan);
+    transition: height 0.3s ease;
+  }
+  .skill-group:hover::before { height: 100%; }
+  .skill-group:hover { background: var(--blue-dark); }
+  .skill-group-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 1rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    border: 1px solid var(--dim);
+    padding: 0.3rem 0.65rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .skill-tag.highlight {
+    color: var(--cyan);
+    border-color: rgba(56,189,248,0.4);
+    background: rgba(56,189,248,0.05);
+  }
+  .skill-group:hover .skill-tag { border-color: rgba(56,189,248,0.3); }
+
+  /* EXPERIENCE */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+  }
+  .timeline-item {
+    padding-left: 2.5rem;
+    padding-bottom: 3rem;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .timeline-dot {
+    position: absolute; left: -5px; top: 6px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 2px solid var(--navy);
+    box-shadow: 0 0 12px var(--cyan);
+  }
+  .timeline-date {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: var(--white);
+  }
+  .timeline-company {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--blue-bright);
+    margin-bottom: 0.85rem;
+  }
+  .timeline-points { list-style: none; }
+  .timeline-points li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    padding-left: 1rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-points li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--cyan);
+    font-size: 0.65rem;
+    top: 0.25rem;
+  }
+
+  /* PROJECTS */
+  .projects-section { background: var(--deep); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1px;
+    background: rgba(46,125,233,0.12);
+    border: 1px solid rgba(46,125,233,0.12);
+  }
+  .project-card {
+    background: var(--navy);
+    padding: 2rem;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .project-card:hover::after { transform: scaleX(1); }
+  .project-card:hover { background: var(--blue-dark); }
+  .project-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--dim);
+    margin-bottom: 1rem;
+    letter-spacing: 0.15em;
+  }
+  .project-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .project-desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .stack-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(30,91,184,0.2);
+    color: var(--cyan-light);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  /* CERTS */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    border: 1px solid rgba(46,125,233,0.2);
+    padding: 1.25rem 1.5rem;
+    border-radius: 2px;
+    background: rgba(10,22,40,0.6);
+    transition: all 0.25s;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .cert-card:hover {
+    border-color: var(--cyan);
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+  }
+  .cert-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .cert-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+  }
+  .cert-issuer {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    text-align: center;
+    padding: 8rem 4rem;
+    background: var(--deep);
+    position: relative; overflow: hidden;
+  }
+  .contact-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(46,125,233,0.08) 0%, transparent 70%);
+  }
+  .contact-section .section-label { justify-content: center; }
+  .contact-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .contact-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 3rem;
+    font-family: var(--font-mono);
+  }
+  .contact-links {
+    display: flex; justify-content: center;
+    gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .contact-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--dim);
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .contact-link:hover {
+    color: var(--cyan);
+    border-color: var(--cyan);
+    background: rgba(56,189,248,0.05);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 1.5rem 4rem;
+    border-top: 1px solid rgba(46,125,233,0.1);
+    display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 1;
+  }
+  footer p {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(30px, 20px) scale(1.05); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 6rem 1.5rem 4rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">sv // portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Embedded Systems Engineer</div>
+    <h1 class="hero-name">
+      <span>Sai</span>
+      <span>Vinushaa</span>
+    </h1>
+    <p class="hero-role">
+      Building scalable embedded solutions and production-grade IoT systems.<br/>
+      Firmware developer. Industrial protocol specialist. AI integrator.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About</div>
+  <div class="section-title">Who I Am</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm an <strong>Embedded Systems Engineer</strong> based in Chennai, Tamil Nadu, with hands-on experience in firmware development, IoT system design, and industrial communication protocols.</p>
+      <p>Currently working at <strong>Wiman Company</strong>, I build and test production-grade embedded systems using Modbus RTU/TCP, STM32, Raspberry Pi, and Python — bridging the gap between hardware and software.</p>
+      <p>Alongside my full-time role, I'm pursuing the <strong>Certified IoT Embedded Engineer (PULSE)</strong> program at IPCS Global — continuously pushing the boundaries of what I know.</p>
+      <p>I also integrate <strong>AI and automation</strong> into my work — having built a GPT-powered client support system and chatbot pipelines that reduced manual workload by over 50%.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">1+</div>
+        <div class="stat-desc">Years Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">7</div>
+        <div class="stat-desc">Projects Built</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">10</div>
+        <div class="stat-desc">Certifications</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-desc">NPTEL Elite</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section">
+  <div class="section-label">Expertise</div>
+  <div class="section-title">Core Skills</div>
+  <div class="skills-grid reveal">
+    <div class="skill-group">
+      <div class="skill-group-title">Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag highlight">C</span>
+        <span class="skill-tag highlight">C++</span>
+        <span class="skill-tag highlight">Python</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Platforms</div>
+      <div class="skill-tags">
+        <span class="skill-tag highlight">STM32</span>
+        <span class="skill-tag highlight">Raspberry Pi</span>
+        <span class="skill-tag">Arduino</span>
+        <span class="skill-tag">PIC</span>
+        <span class="skill-tag">Embedded Linux</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Protocols</div>
+      <div class="skill-tags">
+        <span class="skill-tag highlight">Modbus RTU/TCP</span>
+        <span class="skill-tag">UART</span>
+        <span class="skill-tag">SPI</span>
+        <span class="skill-tag">I2C</span>
+        <span class="skill-tag">RS485</span>
+        <span class="skill-tag">CAN</span>
+        <span class="skill-tag">MQTT</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Tools & IDEs</div>
+      <div class="skill-tags">
+        <span class="skill-tag highlight">STM32CubeIDE</span>
+        <span class="skill-tag">MPLAB X</span>
+        <span class="skill-tag">Arduino IDE</span>
+        <span class="skill-tag">KiCad</span>
+        <span class="skill-tag">VS Code</span>
+        <span class="skill-tag">LTSpice</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Debug & Hardware</div>
+      <div class="skill-tags">
+        <span class="skill-tag">JTAG</span>
+        <span class="skill-tag">Logic Analyzer</span>
+        <span class="skill-tag">Oscilloscope</span>
+        <span class="skill-tag">Soldering</span>
+        <span class="skill-tag">PCB Design</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">AI & Automation</div>
+      <div class="skill-tags">
+        <span class="skill-tag highlight">OpenAI API</span>
+        <span class="skill-tag">ChatGPT</span>
+        <span class="skill-tag">n8n</span>
+        <span class="skill-tag">Botpress</span>
+        <span class="skill-tag">TensorFlow</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <div class="section-title">Experience</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Jul 2025 – Present</div>
+      <div class="timeline-title">Embedded Systems Engineer</div>
+      <div class="timeline-company">Wiman Company, Chennai</div>
+      <ul class="timeline-points">
+        <li>QA & R&D testing for 10+ embedded systems using Modbus RTU/TCP</li>
+        <li>Firmware dev for 5+ microcontrollers — 30% defect rate reduction</li>
+        <li>IoT monitoring systems managing 20+ industrial sensors</li>
+        <li>Built AI-powered GPT client support system — 50% faster response time</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2026 – Present (Concurrent)</div>
+      <div class="timeline-title">Embedded Systems Engineer – Industrial Certification Program</div>
+      <div class="timeline-company">IPCS Global, Chennai</div>
+      <ul class="timeline-points">
+        <li>Certified IoT Embedded Engineer (PULSE) — pursued alongside full-time role</li>
+        <li>4+ live industry-aligned projects: STM32, Raspberry Pi, cloud IoT</li>
+        <li>Deep-dive into CAN, Modbus, MQTT in structured engineering environment</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Jul 2024 – Feb 2025</div>
+      <div class="timeline-title">Embedded Systems Engineer – Trainee</div>
+      <div class="timeline-company">Pumo Technologies, Chennai</div>
+      <ul class="timeline-points">
+        <li>Firmware for 3+ real-time embedded applications in C/C++</li>
+        <li>Sensor interfacing for 8+ IoT devices across multiple platforms</li>
+        <li>50+ QA test cycles — 20% defect reduction across releases</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Jan 2022 – Mar 2022</div>
+      <div class="timeline-title">Embedded Systems Engineer – Intern</div>
+      <div class="timeline-company">FLDEC Systems, Chennai</div>
+      <ul class="timeline-points">
+        <li>Firmware for 3+ IoT microcontroller applications</li>
+        <li>Sensor interfacing across 5+ hardware platforms</li>
+        <li>Hardware-software integration — 15% reliability improvement</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="projects-section">
+  <div class="section-label">Work</div>
+  <div class="section-title">Key Projects</div>
+  <div class="projects-grid reveal">
+    <div class="project-card">
+      <div class="project-num">01</div>
+      <div class="project-title">AI-Powered Client Support System</div>
+      <div class="project-desc">GPT-based AI assistant for Wiman — automates technical queries, device troubleshooting, and customer support. Reduced response time from hours to under 2 minutes.</div>
+      <div class="project-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">OpenAI API</span>
+        <span class="stack-tag">ChatGPT</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">02</div>
+      <div class="project-title">STM32 Motor Control with PWM</div>
+      <div class="project-desc">Firmware for STM32 Nucleo controlling DC motor speed (0–100% duty cycle) with 1kHz switching. Debugged using JTAG and logic analyzer — under 5% speed variation under load.</div>
+      <div class="project-stack">
+        <span class="stack-tag">STM32</span>
+        <span class="stack-tag">STM32CubeIDE</span>
+        <span class="stack-tag">Embedded C</span>
+        <span class="stack-tag">JTAG</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">03</div>
+      <div class="project-title">Raspberry Pi Environmental Monitor</div>
+      <div class="project-desc">Real-time temperature and humidity monitoring with DHT11/DHT22 sensors. 5-second sampling, 98%+ sensor accuracy, 30+ days data logging and trend analysis.</div>
+      <div class="project-stack">
+        <span class="stack-tag">Raspberry Pi</span>
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">DHT22</span>
+        <span class="stack-tag">IoT</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">04</div>
+      <div class="project-title">Esophageal Cancer Detection — ML</div>
+      <div class="project-desc">TensorFlow ML model achieving 89%+ accuracy in early cancer detection from 1,000+ medical datasets. Web interface for real-time clinical predictions.</div>
+      <div class="project-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">TensorFlow</span>
+        <span class="stack-tag">Web</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">05</div>
+      <div class="project-title">Technical Support Chatbot</div>
+      <div class="project-desc">Automated chatbot pipeline handling 20+ query types with decision-tree logic. Cut manual support effort by 35% and improved first-response time by 60%.</div>
+      <div class="project-stack">
+        <span class="stack-tag">n8n</span>
+        <span class="stack-tag">Botpress</span>
+        <span class="stack-tag">Automation</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">06</div>
+      <div class="project-title">Smart Home Automation System</div>
+      <div class="project-desc">IoT-based remote monitoring and control of 6+ appliances. 4+ sensor nodes with sub-second response time and 95%+ uptime in simulation.</div>
+      <div class="project-stack">
+        <span class="stack-tag">IoT</span>
+        <span class="stack-tag">TinkerCAD</span>
+        <span class="stack-tag">Embedded C</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="section-label">Credentials</div>
+  <div class="section-title">Certifications</div>
+  <div class="certs-grid reveal">
+    <div class="cert-card">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">Industry 4.0 & Industrial IoT</div>
+        <div class="cert-issuer">NPTEL Elite — IIT</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">Leadership & Team Effectiveness — 76%</div>
+        <div class="cert-issuer">NPTEL Elite — IIT Roorkee</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🏅</div>
+      <div>
+        <div class="cert-name">Entrepreneurship — 75%</div>
+        <div class="cert-issuer">NPTEL Elite — IIT Madras</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🎓</div>
+      <div>
+        <div class="cert-name">Certified IoT Embedded Engineer (PULSE)</div>
+        <div class="cert-issuer">IPCS Global — In Progress</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">💡</div>
+      <div>
+        <div class="cert-name">Introduction to Linux</div>
+        <div class="cert-issuer">LinkedIn Learning — 2025</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">💡</div>
+      <div>
+        <div class="cert-name">Technical Writing: Quick Start Guides</div>
+        <div class="cert-issuer">LinkedIn Learning — 2025</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🤖</div>
+      <div>
+        <div class="cert-name">AI for Beginners</div>
+        <div class="cert-issuer">HP LIFE — HP Foundation</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">📡</div>
+      <div>
+        <div class="cert-name">Lead Generation Chatbot — Chatfuel</div>
+        <div class="cert-issuer">Coursera</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-label">Contact</div>
+  <h2 class="contact-title">Let's Work Together</h2>
+  <p class="contact-sub">Available in 15 days — Chennai, Tamil Nadu</p>
+  <div class="contact-links">
+    <a href="mailto:saivinu40@gmail.com" class="contact-link">saivinu40@gmail.com</a>
+    <a href="tel:+917338747774" class="contact-link">+91 7338747774</a>
+    <a href="https://linkedin.com/in/vinushaasai09" class="contact-link" target="_blank">LinkedIn</a>
+    <a href="https://github.com/vinushaaz" class="contact-link" target="_blank">GitHub</a>
+  </div>
+  <a href="mailto:saivinu40@gmail.com" class="btn btn-primary">Send a Message</a>
+</section>
+
+<footer>
+  <p>Sai Vinushaa — Embedded Systems Engineer</p>
+  <p>Chennai, Tamil Nadu, India</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+  });
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal, .timeline-item, .cert-card, .project-card, .skill-group, .stat-card').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger timeline items
+  document.querySelectorAll('.timeline-item').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.15}s`;
+  });
+</script>
+</body>
+</html>
