@@ -6,7 +6,7 @@
 <title>Sai Vinushaa — Embedded Systems Engineer</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-  :root {
+  : root {
     --navy: #050d1a;
     --deep: #0a1628;
     --blue-dark: #0f2444;
