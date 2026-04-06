@@ -583,6 +583,21 @@
     .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
   }
+  /* FIX: Allow clicks through custom cursor layers */
+.cursor,
+.cursor-ring,
+#mouseWord {
+  pointer-events: none !important;
+}
+
+/* FIX: Make contact links sit above everything */
+.contact-links {
+  position: relative;
+  z-index: 10000;
+}
+  .contact-link {
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
