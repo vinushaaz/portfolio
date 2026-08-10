@@ -9,7 +9,7 @@
 // mistake is exactly what causes a blank white/dark screen with a
 // "Identifier has already been declared" error in the console.
 // ============================================================================
-var SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co";
+var SUPABASE_URL = "https://uakelejwhdcyrnvcwknn.supabase.co";
 var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVha2VsZWp3aGRjeXJudmN3a25uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNTQyNzgsImV4cCI6MjEwMTgzMDI3OH0.Uu7f0PyfZmNON1tI14lMaUkHNVbqN1kr9hXszFp9VC4";
 
 // Storage bucket used for all uploaded media (avatar, thumbnails, resume, pdfs...)
